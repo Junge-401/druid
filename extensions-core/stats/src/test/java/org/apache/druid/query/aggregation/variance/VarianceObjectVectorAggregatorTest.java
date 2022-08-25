@@ -46,7 +46,10 @@ public class VarianceObjectVectorAggregatorTest extends InitializedNullHandlingT
       null,
       new VarianceAggregatorCollector(2, 183, 1984.5)
   };
-  private static final boolean[] NULLS = new boolean[]{false, false, true, true, false};
+  /**
+   *   this variable is same as VALUES but with a different type.
+   *   This is used in *compatability tests to verify that VarianceObjectVectorAggregator can handle object arrays as well
+   */
   private static final Object[] OBJECTS = new Object[]{
           new VarianceAggregatorCollector(1, 7.8, 0),
           new VarianceAggregatorCollector(1, 11, 0),
@@ -54,6 +57,7 @@ public class VarianceObjectVectorAggregatorTest extends InitializedNullHandlingT
           null,
           new VarianceAggregatorCollector(2, 183, 1984.5)
   };
+  private static final boolean[] NULLS = new boolean[]{false, false, true, true, false};
 
   @Mock
   private VectorObjectSelector selector;
