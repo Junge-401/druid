@@ -58,7 +58,6 @@ import org.apache.druid.sql.calcite.util.CalciteTests;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -1661,6 +1660,49 @@ public class CalciteArraysQueryTest extends BaseCalciteQueryTest
   }
 
   @Test
+  public void testArrayAggQuantile()
+  {
+    cannotVectorize();
+    testQuery(
+        "SELECT ARRAY_QUANTILE(ARRAY_AGG(l1), 0.9) FROM numfoo",
+        ImmutableList.of(
+            Druids.newTimeseriesQueryBuilder()
+                  .dataSource(CalciteTests.DATASOURCE3)
+                  .intervals(querySegmentSpec(Filtration.eternity()))
+                  .granularity(Granularities.ALL)
+                  .aggregators(
+                      aggregators(
+                          new ExpressionLambdaAggregatorFactory(
+                              "a0",
+                              ImmutableSet.of("l1"),
+                              "__acc",
+                              "ARRAY<LONG>[]",
+                              "ARRAY<LONG>[]",
+                              true,
+                              true,
+                              false,
+                              "array_append(\"__acc\", \"l1\")",
+                              "array_concat(\"__acc\", \"a0\")",
+                              null,
+                              null,
+                              ExpressionLambdaAggregatorFactory.DEFAULT_MAX_SIZE_BYTES,
+                              TestExprMacroTable.INSTANCE
+                          )
+                      )
+                  )
+                  .postAggregators(
+                      expressionPostAgg("p0", "array_quantile(\"a0\",0.9)")
+                  )
+                  .context(QUERY_CONTEXT_DEFAULT)
+                  .build()
+        ),
+        // Different results because there are some nulls in the column. In SQL-compatible mode we ignore them;
+        // in replace-with-default mode we treat them as zeroes.
+        ImmutableList.of(new Object[]{NullHandling.sqlCompatible() ? 260259.80000000002 : 162665.0})
+    );
+  }
+
+  @Test
   public void testArrayAggArrays()
   {
     try {
@@ -2179,7 +2221,7 @@ public class CalciteArraysQueryTest extends BaseCalciteQueryTest
   }
 
   @Test
-  public void testArrayAggGroupByArrayAggOfLongsFromSubquery() throws IOException
+  public void testArrayAggGroupByArrayAggOfLongsFromSubquery()
   {
     requireMergeBuffers(3);
     cannotVectorize();
@@ -2252,7 +2294,7 @@ public class CalciteArraysQueryTest extends BaseCalciteQueryTest
   }
 
   @Test
-  public void testArrayAggGroupByArrayAggOfStringsFromSubquery() throws IOException
+  public void testArrayAggGroupByArrayAggOfStringsFromSubquery()
   {
     requireMergeBuffers(3);
     cannotVectorize();
@@ -2318,7 +2360,7 @@ public class CalciteArraysQueryTest extends BaseCalciteQueryTest
   }
 
   @Test
-  public void testArrayAggGroupByArrayAggOfDoubleFromSubquery() throws IOException
+  public void testArrayAggGroupByArrayAggOfDoubleFromSubquery()
   {
     requireMergeBuffers(3);
     cannotVectorize();
