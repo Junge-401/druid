@@ -214,9 +214,9 @@
         <!-- distribution packaging -->
         <module>distribution</module>
         <!-- Revised integration tests -->
-        <module>integration-tests-ex/tools</module>
-        <module>integration-tests-ex/image</module>
-        <module>integration-tests-ex/cases</module>
+<!--        <module>integration-tests-ex/tools</module>-->
+<!--        <module>integration-tests-ex/image</module>-->
+<!--        <module>integration-tests-ex/cases</module>-->
     </modules>
 
     <repositories>
@@ -1498,25 +1498,25 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>7.0.4</version>
-                <configuration>
-                    <failBuildOnCVSS>7</failBuildOnCVSS>
-                    <skipProvidedScope>true</skipProvidedScope>
-                    <skipSystemScope>true</skipSystemScope>  <!-- avoid error when processing jdk.tools:jdk.tools:jar:1.8:system -->
-                    <!-- For node analysis info, see https://github.com/jeremylong/DependencyCheck/issues/2482#issuecomment-603755623 -->
-                    <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>  <!-- plugin author (jeremylong) recommends to disable, since this analyzer is retired -->
-                    <nodeAuditSkipDevDependencies>true</nodeAuditSkipDevDependencies>
-                    <suppressionFile>owasp-dependency-check-suppressions.xml</suppressionFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>none</phase>  <!-- TODO: Consider enabling so part of dev flow instead of just CI -->
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.owasp</groupId>-->
+<!--                <artifactId>dependency-check-maven</artifactId>-->
+<!--                <version>7.0.4</version>-->
+<!--                <configuration>-->
+<!--                    <failBuildOnCVSS>7</failBuildOnCVSS>-->
+<!--                    <skipProvidedScope>true</skipProvidedScope>-->
+<!--                    <skipSystemScope>true</skipSystemScope>  &lt;!&ndash; avoid error when processing jdk.tools:jdk.tools:jar:1.8:system &ndash;&gt;-->
+<!--                    &lt;!&ndash; For node analysis info, see https://github.com/jeremylong/DependencyCheck/issues/2482#issuecomment-603755623 &ndash;&gt;-->
+<!--                    <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>  &lt;!&ndash; plugin author (jeremylong) recommends to disable, since this analyzer is retired &ndash;&gt;-->
+<!--                    <nodeAuditSkipDevDependencies>true</nodeAuditSkipDevDependencies>-->
+<!--                    <suppressionFile>owasp-dependency-check-suppressions.xml</suppressionFile>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>none</phase>  &lt;!&ndash; TODO: Consider enabling so part of dev flow instead of just CI &ndash;&gt;-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
         <pluginManagement>
             <plugins>
